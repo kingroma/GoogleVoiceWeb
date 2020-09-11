@@ -98,8 +98,7 @@ function sendDataToServer(blob) {
 	var req = new XMLHttpRequest();
 	
 	form.append("audio", blob);    
-	form.append("text",$('#text').val())
-    console.log ( $('#text').val())
+	
     req.onreadystatechange = function() {
         if (req.readyState == XMLHttpRequest.DONE  ) {
         	console.log("REQUEST DONE")

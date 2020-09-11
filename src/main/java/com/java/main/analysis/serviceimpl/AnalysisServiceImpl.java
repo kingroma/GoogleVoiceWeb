@@ -41,7 +41,6 @@ public class AnalysisServiceImpl implements AnalysisService{
 		
 		
 		if ( m.find() )  {
-			System.out.println();
 			for ( int i = 0 ; i < m.groupCount() + 1 ; i ++ ) {
 				if ( i == 1 ) {
 					logger.info("IMAGE_CHANGE NUMBER = {} ", m.group(1));

@@ -67,24 +67,25 @@ public class HomeController {
 		String text = null ; 
 
 		try {
-//			File file = null;
-//	        MultipartFile audiofile = request.getFile("audio");
-//	        byte[] audioData = audiofile.getBytes();
-//
-//	        if (!audiofile.isEmpty()) {
-//	            if (audiofile.getSize() > 0) { 
-//	            	file = new File(WAV_PATH);
-//	                OutputStream out2 = new FileOutputStream(file);
-//	                out2.write(audioData);
-//	                out2.close();
-//	            }
-//	        }
-//	        
-//	        text = googleService.wavToText(file.getAbsolutePath());
-			text = request.getParameter("text");
+			File file = null;
+	        MultipartFile audiofile = request.getFile("audio");
+	        byte[] audioData = audiofile.getBytes();
+
+	        if (!audiofile.isEmpty()) {
+	            if (audiofile.getSize() > 0) { 
+	            	file = new File(WAV_PATH);
+	                OutputStream out2 = new FileOutputStream(file);
+	                out2.write(audioData);
+	                out2.close();
+	            }
+	        }
+	        
+	        text = googleService.wavToText(file.getAbsolutePath());
 			logger.info("TEXT = {}",text);
 			
-	        analysisMap = analysisService.analysis(text);
+			if ( text != null && !text.isEmpty() ) {
+				analysisMap = analysisService.analysis(text);
+			}
 	        
 	        if ( analysisMap != null ) {
 	        	for ( String key : analysisMap.keySet() ) { 

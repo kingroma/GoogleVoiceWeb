@@ -56,7 +56,7 @@ public class GoogleClient implements Google{
 			
 			RECOGNITION_CONFIG = RecognitionConfig.newBuilder()
 			              .setEncoding(AudioEncoding.LINEAR16)
-			              .setSampleRateHertz(16000)
+//			              .setSampleRateHertz(16000) // 확인좀 필요할 듯 
 			              .setLanguageCode(LANGUAGE)
 			              .build();
 			
