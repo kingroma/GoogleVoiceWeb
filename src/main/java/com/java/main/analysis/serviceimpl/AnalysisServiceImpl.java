@@ -20,23 +20,50 @@ public class AnalysisServiceImpl implements AnalysisService{
  
 	public Map<String,String> analysis(String text) {
 		Map<String,String> result = null ;
-		if ( isImageChange (text) ) { 
+		if ( isImageChange (text) ) {
 			logger.info("MATCH IMAGE CHANGE");
-			
+			text = hangulToNumber(text);
 			result = getImageChangeParam(text) ;
 		}
 		
 		return result ; 
 	}
 	
-	private final String IMAGE_CHANGE_REGEXT = "[ㄱ-ㅎ가-힣 ]*([0-9]+).*[(그림)(이미지)]?.*[(보여)(틀어줘)(변경)].*";
+	private final String IMAGE_CHANGE_REGEX = "[ㄱ-ㅎ가-힣 ]*([0-9]+)번.*[(그림)(이미지)]?.*[(보여)(틀어줘)(변경)].*";
+	private final String[] IMAGE_CHANGE_HANGUL = {
+			"일번",
+			"이번",
+			"삼번",
+			"사번",
+			"오번",
+			"육번",
+			"칠번",
+			"팔번",
+			"구번"
+	};
+	
+	private String hangulToNumber(String text ){
+		int i = 1 ; 
+		for ( String str : IMAGE_CHANGE_HANGUL ){
+			if ( text.indexOf(str) >= 0 ) {
+				logger.info("HANGUL CHANGE " + text + " >> " + i + "번");
+				text = text.replace(str, "" + i + "번");
+				logger.info("HANGUL CHANGE AFTER = {} ",text);
+				break;
+			}
+			i++;
+		}
+		return text ; 
+	}
+	
 	private boolean isImageChange(String text) {
-		return Pattern.matches(IMAGE_CHANGE_REGEXT, text);
+		text = hangulToNumber(text);
+		return Pattern.matches(IMAGE_CHANGE_REGEX, text);
 	}
 	
 	private Map<String,String> getImageChangeParam(String text) {
 		Map<String,String> result = null ;
-		Pattern p = Pattern.compile(IMAGE_CHANGE_REGEXT);
+		Pattern p = Pattern.compile(IMAGE_CHANGE_REGEX);
 		Matcher m = p.matcher(text);
 		
 		
@@ -48,6 +75,7 @@ public class AnalysisServiceImpl implements AnalysisService{
 					result.put("number", m.group(1));
 					result.put("method", IMAGE_CHANGE);
 					result.put("methodName", "IMAGE_CHANGE");
+					result.put("analysisText", text);
 				}
 			}
 		}
@@ -57,7 +85,7 @@ public class AnalysisServiceImpl implements AnalysisService{
 	
 	public static void main(String[] args) {
 		AnalysisService as = new AnalysisServiceImpl();
-		Map<String,String> map = as.analysis("안녕 1번 으로 변경해줘");
+		Map<String,String> map = as.analysis("이번 그림으로 변경해줘");
 		System.out.println(map);
 	}
 }

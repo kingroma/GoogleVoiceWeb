@@ -35,7 +35,9 @@ public class GoogleClient implements Google{
 	
 	private SpeechSettings SPEECH_SETTINGS = null ;
 	
-	private RecognitionConfig RECOGNITION_CONFIG = null ; 
+	private RecognitionConfig RECOGNITION_CONFIG = null ;
+	
+	private SpeechClient SPEECH_CLIENT = null ;  
 	
 	private final String LANGUAGE = "ko-KR"; // en-US
 	public GoogleClient() {
@@ -59,7 +61,7 @@ public class GoogleClient implements Google{
 //			              .setSampleRateHertz(16000) // 확인좀 필요할 듯 
 			              .setLanguageCode(LANGUAGE)
 			              .build();
-			
+			SPEECH_CLIENT = SpeechClient.create(SPEECH_SETTINGS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,15 +72,13 @@ public class GoogleClient implements Google{
 		String result = null ; 
 		
 		try {
-			SpeechClient speechClient = SpeechClient.create(SPEECH_SETTINGS);
-			
 			Path path = Paths.get(filePath);
 			byte[] data = Files.readAllBytes(path);
 			ByteString audioBytes = ByteString.copyFrom(data);
 			
 			RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
 			
-			RecognizeResponse response = speechClient.recognize(RECOGNITION_CONFIG, audio);
+			RecognizeResponse response = SPEECH_CLIENT.recognize(RECOGNITION_CONFIG, audio);
 			List<SpeechRecognitionResult> results = response.getResultsList();
 			
 			for (SpeechRecognitionResult r : results) {

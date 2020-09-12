@@ -112,7 +112,13 @@ function sendDataToServer(blob) {
         		$('#img').attr("src","get/"+obj.number);
         	}
         	
-        	$('#after').html("result : [" + obj.methodName + "] " + obj.text);
+        	var text = obj.text ;
+        	
+        	if ( obj.analysisText != null && obj.analysisText != undefined ){
+        		text = obj.analysisText ;
+        	}
+        	
+        	$('#after').html("result : [" + obj.methodName + "] " + text);
         }
     };
     
